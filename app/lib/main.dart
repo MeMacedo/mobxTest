@@ -1,8 +1,11 @@
 import 'package:app/screens/info/info_screen.dart';
 import 'package:app/screens/login/login_screen.dart';
+import 'package:app/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  await SharedPreferencesService.init();
+
   runApp(const MyApp());
 }
 

@@ -1,13 +1,24 @@
 import 'package:app/components/common/privacy_policy.dart';
+import 'package:app/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class InfoScreen extends StatelessWidget {
+class InfoScreen extends StatefulWidget {
   InfoScreen({super.key});
+
+  @override
+  State<InfoScreen> createState() => _InfoScreenState();
+}
+
+class _InfoScreenState extends State<InfoScreen> {
+  @override
+  void initState() {
+    infos = SharedPreferencesService().getInfos();
+    super.initState();
+  }
 
   FocusNode inputFocus = FocusNode();
 
-  final infos = ['', 'info 2'];
+  late final List<String>? infos;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -33,7 +44,7 @@ class InfoScreen extends StatelessWidget {
               ),
               child: const Text('Sim'),
               onPressed: () {
-                infos.removeAt(index);
+                infos?.removeAt(index);
               },
             ),
           ],
@@ -45,7 +56,7 @@ class InfoScreen extends StatelessWidget {
   _getInfoCard(int index, BuildContext context) {
     return Row(
       children: [
-        Text(infos[index]),
+        Text(infos?[index] ?? ''),
         const Icon(Icons.person),
         IconButton(
           onPressed: () => _confirmDeletion(context, index),
@@ -67,7 +78,7 @@ class InfoScreen extends StatelessWidget {
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(),
             itemBuilder: (context, index) => _getInfoCard(index, context),
-            itemCount: infos.length,
+            itemCount: infos?.length ?? 0,
             shrinkWrap: true,
           )
         ],
@@ -79,9 +90,10 @@ class InfoScreen extends StatelessWidget {
     return Form(
       key: _formKey,
       child: TextFormField(
-        onFieldSubmitted: (input) {
+        onFieldSubmitted: (input) async {
           if (_formKey.currentState!.validate()) {
-            infos.add(input);
+            infos?.add(input);
+            await SharedPreferencesService().setInfos(infos ?? []);
           }
           inputFocus.requestFocus();
         },
@@ -119,7 +131,7 @@ class InfoScreen extends StatelessWidget {
           children: [
             _getInfoListing(context),
             _getInfoInput(),
-            PrivacyPolicy()
+            const PrivacyPolicy()
           ],
         ),
       ),

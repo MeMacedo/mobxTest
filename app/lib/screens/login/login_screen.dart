@@ -2,7 +2,6 @@ import 'package:app/components/common/privacy_policy.dart';
 import 'package:app/main.dart';
 import 'package:app/services/validators_service.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -62,20 +61,6 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  TextButton _getPrivacyPolicy() {
-    final url = Uri.parse('https://www.google.com');
-
-    return TextButton(
-      onPressed: () {
-        launchUrl(url);
-      },
-      child: const Text(
-        'Politica de Privacidade',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +84,7 @@ class LoginView extends StatelessWidget {
             _getUserName(),
             _getUserPassword(),
             _getLoginButton(),
-            PrivacyPolicy(),
+            const PrivacyPolicy(),
           ]),
         ),
       ),
