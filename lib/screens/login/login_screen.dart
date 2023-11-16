@@ -11,13 +11,24 @@ class LoginView extends StatelessWidget {
   TextFormField _getUserName() {
     return TextFormField(
       decoration: const InputDecoration(
+        contentPadding: EdgeInsets.zero,
+        filled: true,
+        fillColor: Colors.white,
         border: OutlineInputBorder(
+          borderSide: BorderSide.none,
           borderRadius: BorderRadius.all(
-            Radius.circular(4),
+            Radius.circular(8),
           ),
         ),
         floatingLabelBehavior: FloatingLabelBehavior.always,
-        labelText: 'Usuário',
+        label: Padding(
+          padding: EdgeInsets.only(bottom: 24, left: 8),
+          child: Text(
+            'Usuário',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
+          ),
+        ),
         prefixIcon: Icon(Icons.person),
       ),
       validator: ValidatorsService().userValidator,
@@ -27,14 +38,27 @@ class LoginView extends StatelessWidget {
   TextFormField _getUserPassword() {
     return TextFormField(
       decoration: const InputDecoration(
+        contentPadding: EdgeInsets.zero,
+        fillColor: Colors.white,
+        filled: true,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         border: OutlineInputBorder(
+          borderSide: BorderSide.none,
           borderRadius: BorderRadius.all(
-            Radius.circular(4),
+            Radius.circular(8),
           ),
         ),
-        labelText: 'Senha',
-        prefixIcon: Icon(Icons.lock_rounded),
+        label: Padding(
+          padding: EdgeInsets.only(bottom: 24, left: 8),
+          child: Text(
+            'Senha',
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
+          ),
+        ),
+        prefixIcon: Icon(
+          Icons.lock_rounded,
+        ),
       ),
       validator: ValidatorsService().passwordValidator,
     );
@@ -46,7 +70,7 @@ class LoginView extends StatelessWidget {
         backgroundColor: Colors.green,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(8),
+            Radius.circular(20),
           ),
         ),
       ),
@@ -55,8 +79,13 @@ class LoginView extends StatelessWidget {
           navigatorKey.currentState!.pushNamed('infos');
         }
       },
-      child: const Text(
-        'Entrar',
+      child: SizedBox(
+        width: 80,
+        child: const Text(
+          'Entrar',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+        ),
       ),
     );
   }
@@ -80,10 +109,20 @@ class LoginView extends StatelessWidget {
         )),
         child: Form(
           key: _formKey,
-          child: Column(children: [
-            _getUserName(),
-            _getUserPassword(),
-            _getLoginButton(),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: _getUserName(),
+            ),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: _getUserPassword()),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: _getLoginButton(),
+            ),
+            const Spacer(),
             const PrivacyPolicy(),
           ]),
         ),
