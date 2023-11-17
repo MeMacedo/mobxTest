@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => LoginView(),
-        'infos': (context) => InfoScreen()
+        'infos': (context) => const InfoScreen()
       },
       title: 'Mobx Test',
       theme: ThemeData(

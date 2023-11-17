@@ -1,9 +1,10 @@
 import 'package:app/components/common/privacy_policy.dart';
+import 'package:app/models/observables/info_list.dart';
 import 'package:app/services/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
 
 class InfoScreen extends StatefulWidget {
-  InfoScreen({super.key});
+  const InfoScreen({super.key});
 
   @override
   State<InfoScreen> createState() => _InfoScreenState();
@@ -12,13 +13,14 @@ class InfoScreen extends StatefulWidget {
 class _InfoScreenState extends State<InfoScreen> {
   @override
   void initState() {
-    infos = SharedPreferencesService().getInfos();
+    infos =
+        InfoList.fromStringList(SharedPreferencesService().getInfos() ?? []);
     super.initState();
   }
 
   FocusNode inputFocus = FocusNode();
 
-  late final List<String>? infos;
+  late final InfoList infos;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -44,7 +46,7 @@ class _InfoScreenState extends State<InfoScreen> {
               ),
               child: const Text('Sim'),
               onPressed: () {
-                infos?.removeAt(index);
+                infos.removeInfo(index);
               },
             ),
           ],
@@ -56,7 +58,7 @@ class _InfoScreenState extends State<InfoScreen> {
   _getInfoCard(int index, BuildContext context) {
     return Row(
       children: [
-        Text(infos?[index] ?? ''),
+        Text(infos.infoList[index]),
         const Icon(Icons.person),
         IconButton(
           onPressed: () => _confirmDeletion(context, index),
@@ -71,17 +73,13 @@ class _InfoScreenState extends State<InfoScreen> {
 
   Container _getInfoListing(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(bottom: 24),
+      height: 100,
       color: Colors.white,
-      child: Column(
-        children: [
-          ListView.separated(
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-            itemBuilder: (context, index) => _getInfoCard(index, context),
-            itemCount: infos?.length ?? 0,
-            shrinkWrap: true,
-          )
-        ],
+      child: ListView.separated(
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+        itemBuilder: (context, index) => _getInfoCard(index, context),
+        itemCount: infos.length,
       ),
     );
   }
@@ -90,10 +88,27 @@ class _InfoScreenState extends State<InfoScreen> {
     return Form(
       key: _formKey,
       child: TextFormField(
+        textAlign: TextAlign.center,
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          fillColor: Colors.white,
+          filled: true,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.all(
+              Radius.circular(8),
+            ),
+          ),
+          hintText: "Digite seu texto",
+          hintStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         onFieldSubmitted: (input) async {
           if (_formKey.currentState!.validate()) {
-            infos?.add(input);
-            await SharedPreferencesService().setInfos(infos ?? []);
+            infos.addInfo(input);
           }
           inputFocus.requestFocus();
         },
@@ -129,9 +144,16 @@ class _InfoScreenState extends State<InfoScreen> {
         ),
         child: Column(
           children: [
-            _getInfoListing(context),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 60,
+                bottom: 20,
+              ),
+              child: _getInfoListing(context),
+            ),
             _getInfoInput(),
-            const PrivacyPolicy()
+            const Spacer(),
+            const PrivacyPolicy(),
           ],
         ),
       ),
