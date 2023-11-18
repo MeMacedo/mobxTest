@@ -12,7 +12,7 @@ class InfoList extends _InfoListModel with _$InfoList {
 
     infos.infoList = ObservableList.of(infoList);
 
-    return InfoList();
+    return infos;
   }
 }
 
@@ -26,19 +26,19 @@ abstract class _InfoListModel with Store {
   int get length => infoList.length;
 
   @action
-  void addInfo(String description) async {
+  Future<void> addInfo(String description) async {
     infoList.add(description);
     await SharedPreferencesService().setInfos(infoList.toList());
   }
 
   @action
-  void removeInfo(int index) async {
+  Future<void> removeInfo(int index) async {
     infoList.removeAt(index);
     await SharedPreferencesService().setInfos(infoList.toList());
   }
 
   @action
-  void editInfo(String info, int index) async {
+  Future<void> editInfo(String info, int index) async {
     infoList[index] = info;
     await SharedPreferencesService().setInfos(infoList.toList());
   }

@@ -37,6 +37,7 @@ class LoginView extends StatelessWidget {
 
   TextFormField _getUserPassword() {
     return TextFormField(
+      obscureText: true,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.zero,
         fillColor: Colors.white,
@@ -79,9 +80,9 @@ class LoginView extends StatelessWidget {
           navigatorKey.currentState!.pushNamed('infos');
         }
       },
-      child: SizedBox(
+      child: const SizedBox(
         width: 80,
-        child: const Text(
+        child: Text(
           'Entrar',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
